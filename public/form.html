@@ -2,9 +2,14 @@
 
 <body>
   <div>
-    <form action="/addpost" method="POST">
-      <input placeholder="title" name="create_title">
-      <input placeholder="body" name="create_body">
+    <h3>Add new customer</h3>
+    <form action="/salesperson/customers" method="POST">
+      <input placeholder="name" name="name">
+      <input placeholder="address" name="address">
+      <select placeholder="kind" name="kind">
+        <option value="home">Home</option>
+        <option value="business">Business</option>
+      </select>
       <button>Submit</button>
       <!---->
     </form>
