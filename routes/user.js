@@ -6,9 +6,9 @@ module.exports = router
 //Create connection
 const db = mysql.createConnection({
   host: 'localhost',
-  user: 'user',
-  password: '123456',
-  database: 'nodemysql'
+  user: 'root',
+  password: 'hmy0115',
+  database: 'database_project'
 });
 
 //Index
