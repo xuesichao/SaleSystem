@@ -8,7 +8,7 @@ const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: 'hmy0115',
-  database: 'nodemysql'
+  database: 'database_project'
 });
 
 //Index
@@ -114,7 +114,9 @@ router.get('/deletepost/:id', (req, res) => {
 router.post('/addpost', (req, res) => {
   // console.log(req.body);
   let sql = 'INSERT INTO posts SET ?';
+  
   //body里的内容付给对象
+  
   let post = {
     title: req.body.create_title,
     body: req.body.create_body
