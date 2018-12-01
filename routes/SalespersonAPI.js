@@ -13,13 +13,34 @@ const db = mysql.createConnection({
   
   //addCustomer
   router.post('/customers',(req,res) => {
-    let sql = 'INSERT INTO customers SET ?';
+    let sql;
+    let post;
+
+    if(req.body.kind==business){
+      sql = 'INSERT INTO customers SET ?';
   
-    let post = {
+      post = {
         name: req.body.name,
         address: req.body.address,
-        kind: req.body.kind
+        kind: req.body.kind,
+        category: req.body.category,
+        company_income: req.body.company_income
+      }
     }
+    if(req.body.kind==home){
+      sql = 'INSERT INTO customers SET ?';
+  
+      post = {
+        name: req.body.name,
+        address: req.body.address,
+        kind: req.body.kind,
+        marry_status: req.body.marry_status,
+        gender: req.body.gender,
+        age: req.body.age,
+        income:req.body.income
+      }
+    }
+    
 
     let query = db.query(sql, post, (err, results) => {
         if (err) throw err;
@@ -95,7 +116,7 @@ const db = mysql.createConnection({
   //modifyOrder
   //???????选择性的modify?
   //登录
-  router.patch('/order/:oid',(req,res) => {
+  router.patch('/orders/:oid',(req,res) => {
     let sql = 'UPDATE transactions SET ? WHERE order_id = '+req.param.oid;
     //是否可以选择modify一部分，或者是将所有数据导过来，但部分数据维持原状
     db.query(sql,(err,result) => {
@@ -109,7 +130,7 @@ const db = mysql.createConnection({
   
   //deleteOrder
   //登录
-  router.delete('/order/:oid',(req,res) => {
+  router.delete('/orders/:oid',(req,res) => {
     let sql = 'DELETE FROM transactions WHERE order_id='+req.param.oid;
     db.query(sql,(err,result) => {
       if(err){
