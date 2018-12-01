@@ -13,8 +13,9 @@ const morgan = require('morgan');
 app.use(morgan('short'));
 //
 
-const router = require('../SaleSystem/routes//user.js');
-app.use(router);
+app.use('/user',require('../SaleSystem/routes/user'));
+app.use('/salesperson',require('../SaleSystem/routes/SalespersonAPI'));
+// app.use('/salesperson',require('../SaleSystem/routes/SalespersonAPI'));
 
 app.use(express.static('./public'));
 
