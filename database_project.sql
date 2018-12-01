@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `business` (
 
 DROP TABLE IF EXISTS `customers`;
 CREATE TABLE IF NOT EXISTS `customers` (
-  `customer_id` int(10) NOT NULL,
+  `customer_id` int(10) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `address` varchar(255) NOT NULL,
   `kind` varchar(255) NOT NULL,
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `home` (
 
 DROP TABLE IF EXISTS `inventory`;
 CREATE TABLE IF NOT EXISTS `inventory` (
-  `order_id` int(10) NOT NULL,
+  `order_id` int(10) NOT NULL AUTO_INCREMENT,
   `order_date` datetime NOT NULL,
   `product_id` int(10) NOT NULL,
   `quantity` int(20) NOT NULL,
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS `inventory` (
 
 DROP TABLE IF EXISTS `product`;
 CREATE TABLE IF NOT EXISTS `product` (
-  `product_id` int(10) NOT NULL,
+  `product_id` int(10) NOT NULL AUTO_INCREMENT,
   `product_name` varchar(255) NOT NULL,
   `kind` varchar(255) NOT NULL,
   `price` int(10) NOT NULL,
@@ -108,9 +108,10 @@ CREATE TABLE IF NOT EXISTS `product` (
 
 DROP TABLE IF EXISTS `region`;
 CREATE TABLE IF NOT EXISTS `region` (
-  `region_id` int(10) NOT NULL,
+  `region_id` int(10) NOT NULL AUTO_INCREMENT,
   `region_name` varchar(255) NOT NULL,
   `region_manager` int(10) NOT NULL,
+  PRIMARY KEY (`region_id`),
   KEY `region_manager` (`region_manager`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -122,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `region` (
 
 DROP TABLE IF EXISTS `salespersons`;
 CREATE TABLE IF NOT EXISTS `salespersons` (
-  `salepersons_id` int(10) NOT NULL,
+  `salepersons_id` int(10) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `address` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
@@ -141,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `salespersons` (
 
 DROP TABLE IF EXISTS `store`;
 CREATE TABLE IF NOT EXISTS `store` (
-  `store_id` int(10) NOT NULL,
+  `store_id` int(10) NOT NULL AUTO_INCREMENT,
   `address` varchar(255) NOT NULL,
   `manager` int(10) NOT NULL,
   `salesperson_num` int(10) NOT NULL,
@@ -159,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `store` (
 
 DROP TABLE IF EXISTS `transactions`;
 CREATE TABLE IF NOT EXISTS `transactions` (
-  `order_id` int(10) NOT NULL,
+  `order_id` int(10) NOT NULL AUTO_INCREMENT,
   `order_date` datetime DEFAULT NULL,
   `product_id` int(10) DEFAULT NULL,
   `salesperson_id` int(10) DEFAULT NULL,
