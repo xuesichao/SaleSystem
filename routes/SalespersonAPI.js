@@ -5,6 +5,7 @@ const router = express.Router();
 module.exports = router
 //Create connection
 const db = mysql.createConnection({
+<<<<<<< HEAD
   host: 'localhost',
   user: 'root',
   password: 'hmy0115',
@@ -20,6 +21,44 @@ router.post('/customers', (req, res) => {
     address: req.body.address,
     kind: req.body.kind
   }
+=======
+    host: 'localhost',
+    user: 'root',
+    password: 'hmy0115',
+    database: 'database_project'
+  });
+  
+  //addCustomer
+  router.post('/customers',(req,res) => {
+    let sql;
+    let post;
+
+    if(req.body.kind==business){
+      sql = 'INSERT INTO customers SET ?';
+  
+      post = {
+        name: req.body.name,
+        address: req.body.address,
+        kind: req.body.kind,
+        category: req.body.category,
+        company_income: req.body.company_income
+      }
+    }
+    if(req.body.kind==home){
+      sql = 'INSERT INTO customers SET ?';
+  
+      post = {
+        name: req.body.name,
+        address: req.body.address,
+        kind: req.body.kind,
+        marry_status: req.body.marry_status,
+        gender: req.body.gender,
+        age: req.body.age,
+        income:req.body.income
+      }
+    }
+    
+>>>>>>> origin/master
 
   let query = db.query(sql, post, (err, results) => {
     if (err) throw err;
@@ -90,6 +129,7 @@ router.get('/orders', (req, res) => {
     console.log(result);
     res.send('search order success');
   });
+<<<<<<< HEAD
 });
 
 //modifyOrder
@@ -117,6 +157,35 @@ router.delete('/order/:oid', (req, res) => {
     }
     console.log(result);
     res.send('delete order success');
+=======
+  
+  //modifyOrder
+  //???????选择性的modify?
+  //登录
+  router.patch('/orders/:oid',(req,res) => {
+    let sql = 'UPDATE transactions SET ? WHERE order_id = '+req.param.oid;
+    //是否可以选择modify一部分，或者是将所有数据导过来，但部分数据维持原状
+    db.query(sql,(err,result) => {
+      if(err){
+        throw err;
+      }
+      console.log(result);
+      res.send('modify order success');
+    });
+  });
+  
+  //deleteOrder
+  //登录
+  router.delete('/orders/:oid',(req,res) => {
+    let sql = 'DELETE FROM transactions WHERE order_id='+req.param.oid;
+    db.query(sql,(err,result) => {
+      if(err){
+        throw err;
+      }
+      console.log(result);
+      res.send('delete order success');
+    });
+>>>>>>> origin/master
   });
 });
 
