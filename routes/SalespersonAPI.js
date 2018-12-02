@@ -14,49 +14,47 @@ const db = mysql.createConnection({
   //addCustomer
   router.post('/customers',(req,res) => {
     let sql;
-    let post;
+    let body;
 
-    if(req.body.kind==business){
+    // if(req.body.kind=="business"){
       sql = 'INSERT INTO customers SET ?';
   
-      post = {
+      body = {
         name: req.body.name,
         address: req.body.address,
-        kind: req.body.kind,
-        category: req.body.category,
-        company_income: req.body.company_income
+        kind: req.body.kind
       }
-    }
-    if(req.body.kind==home){
-      sql = 'INSERT INTO customers SET ?';
-  
-      post = {
-        name: req.body.name,
-        address: req.body.address,
-        kind: req.body.kind,
-        marry_status: req.body.marry_status,
-        gender: req.body.gender,
-        age: req.body.age,
-        income:req.body.income
-      }
-    }
-    
-
-    let query = db.query(sql, post, (err, results) => {
+      console.log(body);
+    let query = db.query(sql, body, (err, results) => {
         if (err) throw err;
         console.log(results);
-        res.send('add new customer success');
+        //res.send('add new customer success');
     });
+      if(req.body.kind=='business'){
+        sql= 'INSERT INTO business (customer_id,category,company_income) VALUES (LAST_INSERT_ID(),"'
+        +req.body.category+'",'+req.body.company_income+')';
+        let query = db.query(sql,(err, results) => {
+          if (err) throw err;
+          console.log(results);
+          res.send('add new customer success');
+      });
+      }
+      if(req.body.kind=='home'){
+        sql= 'INSERT INTO home (customer_id,marry_status,gender,age,income) VALUES (LAST_INSERT_ID(),"'
+        +req.body.marry_status+'","'+req.body.gender+'",'+req.body.age+','+req.body.income+')';
+        let query = db.query(sql,(err, results) => {
+          if (err) throw err;
+          console.log(results);
+          res.send('add new customer success');
+      });
+      }
   });
   
   //searchCustomer
   //search name
   router.get('/customers',(req,res) => {
-    let sql = 'SELECT * FROM customers WHERE name=?';
-    let get = {
-        name: req.body.name
-    }
-    db.query(sql,get,(err,result) => {
+    let sql = 'SELECT * FROM customers WHERE name='+req.body.name;
+    db.query(sql,(err,result) => {
       if(err){
         throw err;
       }
@@ -67,7 +65,7 @@ const db = mysql.createConnection({
   
   //deleteCustomer
   router.delete('/customers/:cid',(req,res) => {
-    let sql = 'DELETE FROM customers WHERE customer_id='+req.param.cid;
+    let sql = 'DELETE FROM customers WHERE customer_id ='+req.params.cid;
     db.query(sql,(err,result) => {
       if(err){
         throw err;
@@ -81,7 +79,7 @@ const db = mysql.createConnection({
   //登录
   router.post('/orders',(req,res) => {
     let sql = 'INSERT INTO transactions SET ?';
-    let post = {
+    let body = {
         //这些项里应该有通过登陆自动获取的部分
         order_date: req.body.order_date,
         product_id: req.body.product_id,
@@ -90,7 +88,7 @@ const db = mysql.createConnection({
         quantity: req.body.quantity,
         store_id: req.body.store_id
     }
-    db.query(sql,post,(err,result) => {
+    db.query(sql,body,(err,result) => {
       if(err){
         throw err;
       }
@@ -117,9 +115,18 @@ const db = mysql.createConnection({
   //???????选择性的modify?
   //登录
   router.patch('/orders/:oid',(req,res) => {
-    let sql = 'UPDATE transactions SET ? WHERE order_id = '+req.param.oid;
+    let sql = 'UPDATE transactions SET ? WHERE order_id = '+req.params.oid;
+    let body = {
+        order_date: req.body.order_date,
+        product_id: req.body.product_id,
+        salesperson_id: req.body.salesperson_id,
+        customer_id: req.body.customer_id,
+        quantity: req.body.quantity,
+        store_id: req.body.store_id
+    }
     //是否可以选择modify一部分，或者是将所有数据导过来，但部分数据维持原状
-    db.query(sql,(err,result) => {
+    //交给前端
+    db.query(sql,body,(err,result) => {
       if(err){
         throw err;
       }
@@ -131,7 +138,7 @@ const db = mysql.createConnection({
   //deleteOrder
   //登录
   router.delete('/orders/:oid',(req,res) => {
-    let sql = 'DELETE FROM transactions WHERE order_id='+req.param.oid;
+    let sql = 'DELETE FROM transactions WHERE order_id='+req.params.oid;
     db.query(sql,(err,result) => {
       if(err){
         throw err;
@@ -144,11 +151,9 @@ const db = mysql.createConnection({
   //searchProduct
   //product_name
   router.get('/products',(req,res) => {
-    let sql = 'SELECT * FROM product WHERE product_name=?';
-    let get = {
-        product_name: req.body.product_name
-    }
-    db.query(sql,get,(err,result) => {
+    let sql = 'SELECT * FROM product WHERE product_name="'+req.body.product_name+'"';
+   
+    db.query(sql,(err,result) => {
       if(err){
         throw err;
       }
