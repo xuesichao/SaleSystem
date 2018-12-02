@@ -11,16 +11,10 @@ app.use(bodyParser.json());
 //每一次操作后输出操作内容
 const morgan = require('morgan');
 app.use(morgan('short'));
-//
-
-app.use('/user',require('../SaleSystem/routes/user'));
-<<<<<<< HEAD
-app.use('/salesperson',require('../SaleSystem/routes/SalespersonAPI'));
+//设置路由
 app.use('/regionManager',require('../SaleSystem/routes/RegionManagerAPI'));
-=======
 app.use('/salesperson',require('../SaleSystem/routes/salespersonAPI'));
 // app.use('/salesperson',require('../SaleSystem/routes/SalespersonAPI'));
->>>>>>> 76db795b0c110ccf221555713cfff8f17dcb900b
 
 app.use(express.static('./public'));
 
