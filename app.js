@@ -12,12 +12,10 @@ app.use(bodyParser.json());
 const morgan = require('morgan');
 app.use(morgan('short'));
 //设置路由
-app.use('/regionManager',require('../SaleSystem/routes/RegionManagerAPI'));
+app.use('/regionManager',require('../SaleSystem/routes/regionManagerAPI'));
 app.use('/salesperson',require('../SaleSystem/routes/salespersonAPI'));
-// app.use('/salesperson',require('../SaleSystem/routes/SalespersonAPI'));
 
 app.use(express.static('./public'));
-
 
 const port = 5000;
 
