@@ -15,7 +15,7 @@ app.use(morgan('short'));
 
 app.use('/user',require('../SaleSystem/routes/user'));
 app.use('/salesperson',require('../SaleSystem/routes/SalespersonAPI'));
-// app.use('/salesperson',require('../SaleSystem/routes/SalespersonAPI'));
+app.use('/regionManager',require('../SaleSystem/routes/RegionManagerAPI'));
 
 app.use(express.static('./public'));
 
