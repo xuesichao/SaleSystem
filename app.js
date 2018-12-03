@@ -12,8 +12,16 @@ app.use(bodyParser.json());
 const morgan = require('morgan');
 app.use(morgan('short'));
 //设置路由
-app.use('/regionManager',require('../SaleSystem/routes/regionManagerAPI'));
-app.use('/salesperson',require('../SaleSystem/routes/salespersonAPI'));
+//CORS
+app.all('*', function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "PUT,POST,PATCH,GET,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Origin,Access-Control-Allow-Headers, X-Requested-With,Origin, X-Requested-With,Content-Type,Accept");
+  res.header("Content-Type", "application/json;charset=utf-8");
+  next();
+});
+app.use('/regionManager', require('../SaleSystem/routes/regionManagerAPI'));
+app.use('/salesperson', require('../SaleSystem/routes/salespersonAPI'));
 
 app.use(express.static('./public'));
 

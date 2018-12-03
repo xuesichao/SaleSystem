@@ -15,6 +15,7 @@ router.get('/', (req, res) => {
   res.send('Welcome!');
 });
 
+
 // addManager() POST /managers
 router.post('/managers', (req, res) => {
   let sql = 'INSERT INTO salespersons SET ?';
@@ -47,7 +48,7 @@ router.get('/managers', (req, res) => {
 // deleteManager() DELETE /managers/mid
 // 如何决定manager的id？
 router.delete('/managers/:mid', (req, res) => {
-  let sql = 'DELETE from salespersons WHERE salepersons_id = ' + req.params.mid;
+  let sql = 'DELETE from salespersons WHERE salespersons_id = ' + req.params.mid;
   let query = db.query(sql, (err, results) => {
     if (err) throw err;
     res.send('Manager deleted...');
@@ -143,8 +144,23 @@ router.patch('/products/:pid', (req, res) => {
     price: req.body.price,
     product_name: req.body.product_name
   }
-  let query = db.query(sql, boday, (err, results) => {
+  let query = db.query(sql, body, (err, results) => {
     if (err) throw err;
     res.send('Products updated...');
+  })
+});
+
+//login
+router.post('/login', (req, res) => {
+  let sql = 'Select salespersons_id, job_title FROM salespersons WHERE username =' + "'" + req.body.username + "'" + 'and password = ' + "'" + req.body.password + "'";
+
+  let body = {
+    username: req.body.username,
+    password: req.body.password
+  }
+  let query = db.query(sql, body, (err, results) => {
+    if (err) throw err;
+    console.log(results);
+    res.json(results);
   })
 });
