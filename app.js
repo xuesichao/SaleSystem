@@ -22,6 +22,7 @@ app.all('*', function (req, res, next) {
 });
 app.use('/regionManager', require('../SaleSystem/routes/regionManagerAPI'));
 app.use('/salesperson', require('../SaleSystem/routes/salespersonAPI'));
+app.use('/aggregation', require('../SaleSystem/routes/aggregationAPI'));
 
 app.use(express.static('./public'));
 
