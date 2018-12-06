@@ -22,6 +22,13 @@ app.all('*', function (req, res, next) {
 });
 app.use('/regionManager', require('../SaleSystem/routes/regionManagerAPI'));
 app.use('/salesperson', require('../SaleSystem/routes/salespersonAPI'));
+app.use('/storeManager', require('../SaleSystem/routes/storeManagerAPI'));
+app.use('/account', require('../SaleSystem/routes/accountAPI'));
+app.use('/aggregation', require('../SaleSystem/routes/aggregationAPI'));
+app.use('/browser', require('../SaleSystem/routes/browserAPI'));
+
+
+
 
 app.use(express.static('./public'));
 

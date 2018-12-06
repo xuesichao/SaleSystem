@@ -28,13 +28,13 @@ router.post('/managers', (req, res) => {
     salary: req.body.salary,
     store_id: req.body.store_id
   }
-  let query = db.query(sql, body, (err, results) => {
+  db.query(sql, body, (err, results) => {
     if (err) throw err;
     res.send('Manager added...');
   });
 });
 
-// showManager() GET /manager/mid
+// showManager() GET /managers
 router.get('/managers', (req, res) => {
   let sql = 'SELECT * FROM salespersons';
   db.query(sql, (err, results) => {
@@ -47,9 +47,9 @@ router.get('/managers', (req, res) => {
 
 // deleteManager() DELETE /managers/mid
 // 如何决定manager的id？
-router.delete('/managers/:mid', (req, res) => {
-  let sql = 'DELETE from salespersons WHERE salespersons_id = ' + req.params.mid;
-  let query = db.query(sql, (err, results) => {
+router.delete('/salespersons/:said', (req, res) => {
+  let sql = 'DELETE from salespersons WHERE salespersons_id = ' + req.params.said;
+  db.query(sql, (err, results) => {
     if (err) throw err;
     res.send('Manager deleted...');
   })
@@ -62,15 +62,19 @@ router.post('/stores', (req, res) => {
     address: req.body.address,
     manager: req.body.manager,
     region_id: req.body.region_id,
-    salesperson_num: req.body.salesperson_num
+    salespersons_num: req.body.salespersons_num
   }
-  let query = db.query(sql, body, (err, results) => {
+  db.query(sql, body, (err, results) => {
+    if (err) throw err;
+  });
+  sql = "SELECT changestoremanager(" + req.body.manager + ")"
+  db.query(sql, body, (err, results) => {
     if (err) throw err;
     res.send('Store added...');
-  });
+  })
 });
 
-// showStore() GET /store/stid
+// showStore() GET /stores
 router.get('/stores', (req, res) => {
   let sql = 'SELECT * FROM store';
   db.query(sql, (err, results) => {
@@ -81,20 +85,45 @@ router.get('/stores', (req, res) => {
   });
 });
 
-// deleteStore() DELETE /store/stid
+// showStore() GET /stores
+router.get('/stores/:stid', (req, res) => {
+  let sql = 'SELECT * FROM store WHERE store_id =' + req.params.stid
+  db.query(sql, (err, results) => {
+    if (err) {
+      throw err;
+    }
+    res.json(results);
+  });
+});
+
+// deleteStore() DELETE /stores/stid
 router.delete('/stores/:stid', (req, res) => {
-  let newTitle = 'Updated Title';
   let sql = 'DELETE from store WHERE store_id =' + req.params.stid;
-  let query = db.query(sql, (err, results) => {
+  db.query(sql, (err, results) => {
     if (err) throw err;
     res.send('Store deleted...');
   });
 });
 
-// changeStoreManager() PUT/PATCH /store/stid
-// 数据库设计 cascade
-// 修改store.manager
-// salespers.title也变化
+// updateStore() PATCH /stores/stid
+router.patch('/stores/:stid', (req, res) => {
+  let sql = 'UPDATE store SET ? WHERE store_id = ' + req.params.stid;
+  let body = {
+    address: req.body.address,
+    store_id: req.body.store_id,
+    manager: req.body.manager,
+    region_id: req.body.region_id,
+    salespersons_num: req.body.salespersons_num
+  }
+  db.query(sql, body, (err, results) => {
+    if (err) throw err;
+  })
+  sql = "SELECT changestoremanager(" + req.body.manager + ")"
+  db.query(sql, body, (err, results) => {
+    if (err) throw err;
+    res.send('Store updated...');
+  })
+});
 
 // addProduct() POST /products
 router.post('/products', (req, res) => {
@@ -107,7 +136,7 @@ router.post('/products', (req, res) => {
     price: req.body.price,
     product_name: req.body.product_name
   }
-  let query = db.query(sql, body, (err, results) => {
+  db.query(sql, body, (err, results) => {
     if (err) throw err;
     res.send('Product added...');
   });
@@ -117,13 +146,13 @@ router.post('/products', (req, res) => {
 router.delete('/products/:pid', (req, res) => {
   let newTitle = 'Updated Title';
   let sql = 'DELETE from product WHERE product_id =' + req.params.pid;
-  let query = db.query(sql, (err, results) => {
+  db.query(sql, (err, results) => {
     if (err) throw err;
     res.send('Product deleted...');
   });
 });
 
-// showProduct() GET /product/pid
+// showProduct() GET /products
 router.get('/products', (req, res) => {
   let sql = 'SELECT * FROM product';
   db.query(sql, (err, results) => {
@@ -134,7 +163,7 @@ router.get('/products', (req, res) => {
   });
 });
 
-// modifyProduct('type',parameter) PUT/PATCH /product/pid
+// updateProduct('type',parameter) PUT/PATCH /product/pid
 router.patch('/products/:pid', (req, res) => {
   let sql = 'UPDATE product SET ? WHERE product_id = ' + req.params.pid;
   let body = {
@@ -144,23 +173,48 @@ router.patch('/products/:pid', (req, res) => {
     price: req.body.price,
     product_name: req.body.product_name
   }
-  let query = db.query(sql, body, (err, results) => {
+  db.query(sql, body, (err, results) => {
     if (err) throw err;
     res.send('Products updated...');
   })
 });
 
-//login
-router.post('/login', (req, res) => {
-  let sql = 'Select salespersons_id, job_title FROM salespersons WHERE username =' + "'" + req.body.username + "'" + 'and password = ' + "'" + req.body.password + "'";
-
-  let body = {
-    username: req.body.username,
-    password: req.body.password
-  }
-  let query = db.query(sql, body, (err, results) => {
-    if (err) throw err;
-    console.log(results);
+// showInventory() GET /inventories
+router.get('/inventories', (req, res) => {
+  let sql = 'SELECT * FROM inventory';
+  db.query(sql, (err, results) => {
+    if (err) {
+      throw err;
+    }
     res.json(results);
-  })
+  });
+});
+
+// addInventory() POST /inventories
+router.post('/inventories', (req, res) => {
+  let sql = 'INSERT INTO inventory SET ?';
+  //body里的内容付给对象
+  let body = {
+    order_date: req.body.order_date,
+    product_id: req.body.product_id,
+    quantity: req.body.quantity,
+  }
+  db.query(sql, body, (err, results) => {
+    if (err) throw err;
+    // res.send('Inventory added...');
+  });
+  sql = 'SELECT inventory_product(' + req.body.product_id + ", " + req.body.quantity + ')';
+  db.query(sql, (err, results) => {
+    if (err) throw err;
+    res.send('Inventory added...');
+  });
+});
+
+// deleteInventory() DELETE /inventories/oid
+router.delete('/inventories/:oid', (req, res) => {
+  let sql = 'DELETE from inventory WHERE order_id =' + req.params.oid;
+  db.query(sql, (err, results) => {
+    if (err) throw err;
+    res.send('Inventory deleted...');
+  });
 });
