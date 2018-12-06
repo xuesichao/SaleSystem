@@ -28,19 +28,19 @@ DELIMITER $$
 --
 DROP FUNCTION IF EXISTS `addsalesperson_store`$$
 CREATE DEFINER=`root`@`localhost` FUNCTION `addsalesperson_store` (`store_id` INT) RETURNS VARCHAR(255) CHARSET latin1 BEGIN
-UPDATE product SET store.salespersons_num= store.salespersons_num+1 WHERE store.store_id=store_id;
+UPDATE store SET store.salespersons_num= store.salespersons_num+1 WHERE store.store_id=store_id;
 Return "add salesperson to store success!";
 END$$
 
 DROP FUNCTION IF EXISTS `changestoremanager`$$
 CREATE DEFINER=`root`@`localhost` FUNCTION `changestoremanager` (`salesperson_id` INT) RETURNS VARCHAR(255) CHARSET latin1 BEGIN
-UPDATE product SET salespersons.job_title= "store_manager" WHERE salespersons.salesperson_id = salesperson_id;
+UPDATE salespersons SET salespersons.job_title= "store_manager" WHERE salespersons.salesperson_id = salesperson_id;
 Return "change store manager job title success!";
 END$$
 
 DROP FUNCTION IF EXISTS `deletesalesperson_store`$$
 CREATE DEFINER=`root`@`localhost` FUNCTION `deletesalesperson_store` (`store_id` INT) RETURNS VARCHAR(255) CHARSET latin1 BEGIN
-UPDATE product SET store.salespersons_num= store.salespersons_num-1 WHERE store.store_id=store_id;
+UPDATE store SET store.salespersons_num= store.salespersons_num-1 WHERE store.store_id=store_id;
 Return "delete salesperson from store success!";
 END$$
 
@@ -467,9 +467,10 @@ INSERT INTO `home` (`customer_id`, `marry_status`, `gender`, `age`, `income`) VA
 DROP TABLE IF EXISTS `inventory`;
 CREATE TABLE IF NOT EXISTS `inventory` (
   `order_id` int(10) NOT NULL AUTO_INCREMENT,
-  `order_date` datetime NOT NULL,
+  `order_date` varchar(255) NOT NULL,
   `product_id` int(10) DEFAULT NULL,
   `quantity` int(20) NOT NULL,
+  `region_id` int(10),
   PRIMARY KEY (`order_id`),
   KEY `product_id` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -816,7 +817,7 @@ INSERT INTO `store` (`store_id`, `address`, `manager`, `salespersons_num`, `regi
 DROP TABLE IF EXISTS `transactions`;
 CREATE TABLE IF NOT EXISTS `transactions` (
   `order_id` int(10) NOT NULL AUTO_INCREMENT,
-  `order_date` datetime DEFAULT NULL,
+  `order_date` varchar(255) DEFAULT NULL,
   `product_id` int(10) DEFAULT NULL,
   `salesperson_id` int(10) DEFAULT NULL,
   `customer_id` int(10) DEFAULT NULL,
@@ -826,21 +827,21 @@ CREATE TABLE IF NOT EXISTS `transactions` (
   KEY `product_index` (`product_id`),
   KEY `salesperson_index` (`salesperson_id`),
   KEY `customer_index` (`customer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10010 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `transactions`
 --
 
 INSERT INTO `transactions` (`order_id`, `order_date`, `product_id`, `salesperson_id`, `customer_id`, `quantity`, `store_id`) VALUES
-(1, '2018-11-25 20:56:04', 10001, 10030, 10001, 2, 10001),
-(2, '2018-11-25 20:56:04', 10001, 10030, 10002, 2, 10001),
-(3, '2018-11-25 20:56:04', 10002, 10031, 10002, 5, 10001),
-(4, '2018-11-25 20:56:04', 10003, 10031, 10002, 1, 10001),
-(5, '2018-11-25 20:56:04', 10001, 10030, 10114, 50, 10001),
-(7, '2018-11-25 20:56:04', 10023, 10032, 10136, 25, 10007),
-(8, '2018-11-25 20:56:04', 10023, 10028, 10153, 70, 10014),
-(9, '2018-11-25 20:56:04', 10011, 10030, 10158, 20, 10006);
+(10001, '2018-11-25 20:56:04', 10001, 10030, 10001, 2, 10001),
+(10002, '2018-11-25 20:56:04', 10001, 10030, 10002, 2, 10001),
+(10003, '2018-11-25 20:56:04', 10002, 10031, 10002, 5, 10001),
+(10004, '2018-11-25 20:56:04', 10003, 10031, 10002, 1, 10001),
+(10005, '2018-11-25 20:56:04', 10001, 10030, 10114, 50, 10001),
+(10007, '2018-11-25 20:56:04', 10023, 10032, 10136, 25, 10007),
+(10008, '2018-11-25 20:56:04', 10023, 10028, 10153, 70, 10014),
+(10009, '2018-11-25 20:56:04', 10011, 10030, 10158, 20, 10006);
 
 --
 -- Constraints for dumped tables
@@ -863,7 +864,7 @@ ALTER TABLE `home`
 --
 ALTER TABLE `inventory`
   ADD CONSTRAINT `inventory_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE SET NULL;
-
+  ADD CONSTRAINT `inventory_ibfk_2` FOREIGN KEY (`region_id`) REFERENCES `region` (`region_id`) ON DELETE SET NULL;
 --
 -- Constraints for table `region`
 --
