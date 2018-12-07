@@ -863,7 +863,7 @@ ALTER TABLE `home`
 -- Constraints for table `inventory`
 --
 ALTER TABLE `inventory`
-  ADD CONSTRAINT `inventory_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `inventory_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE SET NULL,
   ADD CONSTRAINT `inventory_ibfk_2` FOREIGN KEY (`region_id`) REFERENCES `region` (`region_id`) ON DELETE SET NULL;
 --
 -- Constraints for table `region`
